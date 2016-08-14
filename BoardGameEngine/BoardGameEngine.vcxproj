@@ -208,9 +208,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="AbstractBoardGame.h" />
     <ClInclude Include="BoardGameAI.h" />
     <ClInclude Include="MoveList.h" />
