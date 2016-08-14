@@ -71,14 +71,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\BoardGames\BoardGames;$(SolutionDir)\BoardGameEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)\BoardGames;$(SolutionDir)\BoardGameEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\BoardGames\BoardGames;$(SolutionDir)\BoardGameEngine;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\BoardGames;$(SolutionDir)\BoardGameEngine;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -160,10 +160,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\BoardGameEngine\BoardGameEngine.vcxproj">
+    <ProjectReference Include="$(SolutionDir)\BoardGameEngine\BoardGameEngine.vcxproj">
       <Project>{dc4026db-585b-4fd8-9576-0d9257a68d5c}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\BoardGames\BoardGames\BoardGames.vcxproj">
+    <ProjectReference Include="$(SolutionDir)\BoardGames\BoardGames.vcxproj">
       <Project>{2da90862-8b52-4819-873a-e3a6a4924631}</Project>
     </ProjectReference>
   </ItemGroup>

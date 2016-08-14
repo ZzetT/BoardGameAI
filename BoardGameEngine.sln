@@ -5,11 +5,11 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BoardGameEngine", "BoardGameEngine\BoardGameEngine.vcxproj", "{DC4026DB-585B-4FD8-9576-0D9257A68D5C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BoardGameEngineTest", "BoardGameEngineTest\BoardGameEngineTest\BoardGameEngineTest.vcxproj", "{9262D296-6B35-4637-ADFE-2FF550633966}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BoardGameEngineTest", "BoardGameEngineTest\BoardGameEngineTest.vcxproj", "{9262D296-6B35-4637-ADFE-2FF550633966}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BoardGames", "BoardGames\BoardGames\BoardGames.vcxproj", "{2DA90862-8B52-4819-873A-E3A6A4924631}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BoardGames", "BoardGames\BoardGames.vcxproj", "{2DA90862-8B52-4819-873A-E3A6A4924631}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BoardGameUI", "BoardGameUI\BoardGameUI\BoardGameUI.vcxproj", "{8D2EC7BA-E641-4823-AA44-14B7910A60C2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BoardGameUI", "BoardGameUI\BoardGameUI.vcxproj", "{8D2EC7BA-E641-4823-AA44-14B7910A60C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
