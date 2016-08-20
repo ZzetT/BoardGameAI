@@ -4,7 +4,7 @@ This library provides an alpha beta pruning C++ implementation that can be used 
 #Goal
 The goal is to provide an efficient but easy to use framework to implement an artifical intelligence for any zero-sum game.
 For each board game the user only needs to inherit from the class `AbstractBoardGame` and implements very basic methods like `getMoves()`,
- `makeMove()`, `undoMove()`, `isGameOver()`, `getHash()` and `evaluate()`.
+ `makeMove()`, `undoMove()`, `isGameOver()`, `getHash()` and `hasWon()`.
  A lot of engines are available that play Chess or other games like Connect Four or Othello. And altohugh the search algorithms are the same or very similar,
  the alpha beta pruning is implemented again and again. The *BoardGameEngine* framework shall generalize this so that it can be used with any board game. If optimizations are added, they shall be applicable for other games, too.
 
