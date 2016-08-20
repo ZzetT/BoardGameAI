@@ -23,6 +23,7 @@ The repository consist of 4 main folders/projects:
 
 #Planned Features
 - transposition tables
+- static & dynamic move ordering
 - quiescence search
 
 #Supported Games
