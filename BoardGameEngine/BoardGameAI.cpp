@@ -11,7 +11,7 @@ int BoardGameAI<DoTrace>::alphaBeta(unsigned int depthLeft, int alpha, int beta)
 		return 0;
 	}
 
-	if ((++nextTimeCheck % timeCheckInterval) == 0 && std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - startTime).count() >= maxTime)
+	if ((maxTime > 0) && (++nextTimeCheck % timeCheckInterval) == 0 && std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - startTime).count() >= maxTime)
 	{
 		abortSearch = true;
 		return 0;
@@ -19,20 +19,18 @@ int BoardGameAI<DoTrace>::alphaBeta(unsigned int depthLeft, int alpha, int beta)
 
 	TRACE_ALPHA_BETA_WINDOW(alpha, beta);
 	if (depthLeft == 0) {
-		TRACE_POSITION_VALUE(game->evaluate());
-		return game->evaluate();
+		return evaluatePosition();
 	}
-	MoveList moves = movesCache.at(depthLeft);
-	moves.clear();
-	if (game->isGameOver() || (game->getMoves(&moves), moves.size()) == 0)
+	MoveList *moves = movesCache.at(depthLeft).get();
+	moves->clear();
+	if (game->isGameOver() || (game->getMoves(moves), moves->size()) == 0)
 	{
-		TRACE_POSITION_VALUE(game->evaluate());
-		return game->evaluate();
+		return evaluatePosition();
 	}
 	int bestValue = -INFINITE;
-	for (std::vector<int>::iterator moveIter = moves.begin(); moveIter != moves.end(); ++moveIter)
+	for (auto& moveIter = moves->begin(); moveIter != moves->end(); ++moveIter)
 	{
-		int move = *moveIter;
+		int move = moveIter->move;
 		game->makeMove(move);
 		TRACE_MAKE_MOVE(move);
 		int value = -alphaBeta<false>(depthLeft - 1, -beta, -alpha);
@@ -66,6 +64,19 @@ int BoardGameAI<DoTrace>::alphaBeta(unsigned int depthLeft, int alpha, int beta)
 	return bestValue;
 }
 
+template<bool DoTrace>
+int BoardGameAI<DoTrace>::evaluatePosition()
+{
+	if (game->hasWon())
+	{
+		int value = -(game->WINNING_VALUE - game->moveCounter);
+		TRACE_POSITION_VALUE(value);
+		return value;
+	}
+	TRACE_POSITION_VALUE(game->evaluate());
+	return game->evaluate();
+}
+
 template<bool DoTrace> int BoardGameAI<DoTrace>::search(const std::shared_ptr<AbstractBoardGame>& gameArgument, unsigned int maxDepth, unsigned int _maxTime)
 {
 	unsigned int currentMaxDepth = 0;
@@ -80,7 +91,7 @@ template<bool DoTrace> int BoardGameAI<DoTrace>::search(const std::shared_ptr<Ab
 	{
 		currentMaxDepth++;
 		while (movesCache.size() <= currentMaxDepth) {
-			movesCache.push_back(MoveList());
+			movesCache.push_back(std::make_unique<MoveList>());
 		}
 
 		std::cout << "depth " << currentMaxDepth;

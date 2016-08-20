@@ -105,7 +105,7 @@ namespace BoardGameEngineTest
 			game.makeMove(2);
 			Assert::AreEqual(0, game.evaluate());
 			game.makeMove(3);
-			Assert::AreEqual(-AbstractBoardGame::WINNING_VALUE, game.evaluate());
+			game.hasWon();
 			Assert::IsTrue(game.isGameOver());
 		}
 		TEST_METHOD(HasWonHorizontal)
@@ -131,7 +131,7 @@ namespace BoardGameEngineTest
 			game.makeMove(5);
 			Assert::AreEqual(0, game.evaluate());
 			game.makeMove(0);
-			Assert::AreEqual(-AbstractBoardGame::WINNING_VALUE, game.evaluate());
+			game.hasWon();
 			Assert::IsTrue(game.isGameOver());
 		}
 		TEST_METHOD(HasWonDiagonal)
@@ -159,7 +159,7 @@ namespace BoardGameEngineTest
 			game.makeMove(2);
 			Assert::AreEqual(0, game.evaluate());
 			game.makeMove(2);
-			Assert::AreEqual(-AbstractBoardGame::WINNING_VALUE, game.evaluate());
+			game.hasWon();
 			Assert::IsTrue(game.isGameOver());
 		}
 		TEST_METHOD(Hash)

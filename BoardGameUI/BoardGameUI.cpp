@@ -20,7 +20,7 @@ bool is_number(const std::string& s)
 int main()
 {
 	std::shared_ptr<Connect4Game> game = std::make_shared<Connect4Game>();
-	MoveList moves;
+	std::unique_ptr<MoveList> moves = std::make_unique<MoveList>();
 	BoardGameAI<> ai;
 	string input;
 
@@ -48,9 +48,9 @@ int main()
 				else
 				{
 					col = stoi(input);
-					moves.clear();
-					game->getMoves(&moves);
-					if (find(moves.begin(), moves.end(), col) != moves.end())
+					moves->clear();
+					game->getMoves(moves.get());
+					if (find_if(moves->begin(), moves->end(), [&col](const Move& obj) {return obj.move == col; }) != moves->end())
 					{
 						game->makeMove(col);
 						break;

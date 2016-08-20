@@ -32,19 +32,19 @@ private:
 	
 
 	bool calculateHaswon();
-	bool haswon() const;
+
 	bool isPlayable(int col) const;
 	friend std::ostream& operator<<(std::ostream&, const Connect4Game&);
 
 public:
 	Connect4Game();
 	~Connect4Game();
-	uint64_t getHash() const;
-	void handleMakeMove(int n);
-	void handleUndoMove();
-	bool isGameOver() const;
-	void getMoves(MoveList* moves) const;
-	int evaluate();
+	uint64_t getHash() const override;
+	void handleMakeMove(int n) override;
+	void handleUndoMove() override;
+	bool isGameOver() const override;
+	void getMoves(MoveList* moves) const override;
+	bool hasWon() const override;
 
 protected:
 

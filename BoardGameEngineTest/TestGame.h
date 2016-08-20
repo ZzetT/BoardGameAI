@@ -20,5 +20,8 @@ public:
 	virtual bool isGameOver() const override;
 	virtual void getMoves(MoveList* moves) const override;
 	virtual int evaluate() override;
+	virtual bool hasWon() const override {
+		return false;
+	}
 };
 

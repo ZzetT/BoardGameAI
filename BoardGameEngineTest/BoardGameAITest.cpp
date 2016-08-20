@@ -94,20 +94,20 @@ namespace BoardGameEngineTest
 
 		}
 
-		///**
-		//* Checks if the AI uses the move with the quickest win
-		//*/
-		//TEST_METHOD(quickestWin)
-		//{
-		//	std::shared_ptr<Connect4Game> game = std::make_shared<Connect4Game>();
-		//	BoardGameAI<> ai;
-		//	std::vector<int> moves = {1,0,1,0,1,1,0,0,2,0,3,4,3,3,2,4,2,2,1};
-		//	game->makeMoves(moves);
-		//	int bestMove = ai.search(game, 6);
+		/**
+		* Checks if the AI uses the move with the quickest win
+		*/
+		TEST_METHOD(quickestWin)
+		{
+			std::shared_ptr<Connect4Game> game = std::make_shared<Connect4Game>();
+			BoardGameAI<> ai;
+			std::vector<int> moves = {1,0,1,0,1,1,0,0,2,0,3,4,3,3,2,4,2,2,1};
+			game->makeMoves(moves);
+			int bestMove = ai.search(game, 6);
 
-		//	Assert::IsTrue(bestMove == 3 || bestMove == 5);
+			Assert::IsTrue(bestMove == 3 || bestMove == 5);
 
-		//}
+		}
 		TEST_METHOD(game5)
 		{
 			std::shared_ptr<Connect4Game> game = std::make_shared<Connect4Game>();

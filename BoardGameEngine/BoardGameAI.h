@@ -20,7 +20,7 @@ class BoardGameAI
 {
 private:
 	std::shared_ptr<AbstractBoardGame> game;
-	std::vector<MoveList> movesCache;
+	std::vector<std::unique_ptr<MoveList>> movesCache;
 	std::shared_ptr<Trace> trace = nullptr;
 	int bestMoveTmp;
 	int nextTimeCheck;
@@ -28,6 +28,7 @@ private:
 	std::chrono::time_point<std::chrono::system_clock> startTime;
 	const int timeCheckInterval = 10000;
 	template<bool isRoot> int alphaBeta(unsigned int depth, int alpha, int beta);
+	int evaluatePosition();
 	bool abortSearch;
 
 public:

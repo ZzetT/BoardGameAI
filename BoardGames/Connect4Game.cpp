@@ -34,7 +34,7 @@ void Connect4Game::handleMakeMove(int n)
 
 void Connect4Game::handleUndoMove()
 {
-	int n = moveHistory.back();
+	int n = moveHistory.back().move;
 	--height[n];
 	color[opponentPlayer()] ^= (uint64_t)1L << height[n];
 	this->hash ^= randomNumbers[opponentPlayer()][height[n]];
@@ -46,7 +46,7 @@ bool Connect4Game::isGameOver() const
 	return won || moveCounter == SIZE;
 }
 
-bool Connect4Game::haswon() const
+bool Connect4Game::hasWon() const
 {
 	return won;
 }
@@ -58,26 +58,13 @@ bool Connect4Game::isPlayable(int col) const
 
 void Connect4Game::getMoves(MoveList* moves) const
 {
-	if (won)
-	{
-		return;
-	}
 	for (int col = 0; col < 7; col++)
 	{
 		if (isPlayable(col)) {
-			moves->push_back(col);
+			moves->push_back(Move(col, col < 4 ? col : (6-col)));
 		}
 	}
-}
-
-int Connect4Game::evaluate()
-{
-	if (won) // the previous player won the game
-	{
-		// previous player won the game
-		return -AbstractBoardGame::WINNING_VALUE;
-	}
-	return 0;
+	moves->sort();
 }
 
 bool Connect4Game::calculateHaswon()
@@ -128,7 +115,7 @@ std::ostream & operator<<(std::ostream &strm, const Connect4Game &game)
 		}
 		strm << endl;
 	}
-	if (game.haswon())
+	if (game.hasWon())
 		strm << "won" << endl;
 	return strm;
 }

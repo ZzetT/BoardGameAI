@@ -71,7 +71,14 @@ public:
 	*
 	* @return the evaluation value for the current player
 	*/
-	virtual int evaluate() = 0;
+	virtual int evaluate() { return 0; }
+
+	/**
+	* Evaluates if the last move has led to a winning position
+	*
+	* @return true if the previous player won the game, otherwise false
+	*/
+	virtual bool hasWon() const = 0;
 
 	static const int WINNING_VALUE = 100000;
 
