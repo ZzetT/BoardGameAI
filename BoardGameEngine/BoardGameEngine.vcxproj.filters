@@ -39,15 +39,21 @@
     <ClInclude Include="MoveList.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Move.h">
+    <ClInclude Include="types.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="MovePicker.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="TTEntry.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="TTableReplaceByDepth.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BoardGameAI.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="AbstractBoardGame.cpp">
@@ -63,9 +69,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="MoveList.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Move.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

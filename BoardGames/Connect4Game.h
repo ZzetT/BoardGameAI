@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <array>
+#include <sstream>
 #include "AbstractBoardGame.h"
 
 #define WIDTH 7
@@ -20,13 +21,12 @@
 #define DIAGONAL1_BITMASK = 1 << 0 | 1 << 8 | 1 << 16 | 1 << 24;
 #define DIAGONAL2_BITMASK = 1 << 3 | 1 << 9 | 1 << 15 | 1 << 21;
 
-
 class Connect4Game : public AbstractBoardGame
 {
 private:
 	uint64_t color[2];  // black and white bitboard
 	uint64_t hash = 0;
-	std::array<int, WIDTH> height; // holds bit index of lowest free square
+	std::array<int, WIDTH+1> height; // holds bit index of lowest free square
 	static const std::array<std::array<uint64_t, 48>, 2> randomNumbers;
 	bool won = false;
 	
@@ -40,15 +40,18 @@ public:
 	Connect4Game();
 	~Connect4Game();
 	uint64_t getHash() const override;
-	void handleMakeMove(int n) override;
+	void handleMakeMove(Move n) override;
 	void handleUndoMove() override;
 	bool isGameOver() const override;
 	void getMoves(MoveList* moves) const override;
 	bool hasWon() const override;
 
-protected:
-
-	
+	std::string toString()
+	{
+		std::stringstream ss;
+		ss << this;
+		return ss.str();
+	}
 
 };
 

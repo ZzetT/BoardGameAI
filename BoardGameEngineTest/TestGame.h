@@ -15,11 +15,11 @@ public:
 	virtual uint64_t getHash() const override;
 
 	// Inherited via AbstractBoardGame
-	virtual void handleMakeMove(int n) override;
+	virtual void handleMakeMove(Move n) override;
 	virtual void handleUndoMove() override;
 	virtual bool isGameOver() const override;
 	virtual void getMoves(MoveList* moves) const override;
-	virtual int evaluate() override;
+	virtual int16_t evaluate() override;
 	virtual bool hasWon() const override {
 		return false;
 	}

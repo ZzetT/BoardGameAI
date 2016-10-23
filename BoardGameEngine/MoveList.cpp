@@ -10,14 +10,9 @@ MoveList::~MoveList()
 {
 }
 
-void MoveList::sort()
-{
-	std::sort(begin(), end(), [](Move a, Move b) { return a.value > b.value; });
-}
-
 std::ostream & operator<<(std::ostream & out, MoveList const & moveList)
 {
-	for (auto& move : moveList)
+	for (auto& move : moveList.moves)
 	{
 		out << std::to_string(move.move);
 	}

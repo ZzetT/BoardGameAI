@@ -9,7 +9,7 @@ class Trace
 public:
 	Trace();
 	virtual ~Trace();
-	virtual void startIterativeSearch(const std::shared_ptr<AbstractBoardGame>& /*game*/) {}
+	virtual void startSearch(const std::shared_ptr<AbstractBoardGame>& /*game*/) {}
 	virtual void tracePositionValue(int /*value*/) {  }
 	virtual void startAlphaBetaSearch(unsigned int /*depth*/) {}
 	virtual void alphaBetaWindow(int /*alpha*/, int /*beta*/) {}

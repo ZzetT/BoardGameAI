@@ -4,16 +4,46 @@
 #include <string>
 #include <memory>
 #include <algorithm>
-#include "Move.h"
+#include "types.h"
 
-class MoveList :
-	public std::vector<Move>
+class MoveList
 {
+private:
+	std::vector<ExtMove> moves;
 public:
 	MoveList();
 	~MoveList();
 	friend std::ostream & operator<<(std::ostream & Str, MoveList const & v);
-	void sort();
+	void clear() {
+		moves.clear();
+	}
+	auto data()
+	{
+		return &moves;
+	}
+	auto data() const
+	{
+		return (const std::vector<ExtMove>*)&moves;
+	}
+	auto lastMove() const
+	{
+		return moves.back();
+	}
+	auto size() const
+	{
+		return moves.size();
+	}
+	void addMove(Move move, Value value)
+	{
+		moves.push_back(ExtMove(move, value));
+	}
+	void addMove(Move move)
+	{
+		moves.push_back(ExtMove(move));
+	}
+	void undoMove()
+	{
+		moves.pop_back();
+	}
 	
 };
-

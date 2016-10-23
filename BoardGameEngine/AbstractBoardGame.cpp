@@ -14,11 +14,11 @@ AbstractBoardGame::~AbstractBoardGame()
 void AbstractBoardGame::undoMove()
 {
 	handleUndoMove();
-	moveHistory.pop_back();
+	moveHistory.undoMove();
 	moveCounter--;
 }
 
-void AbstractBoardGame::makeMoves(std::vector<int>& moves)
+void AbstractBoardGame::makeMoves(std::vector<Move>& moves)
 {
 	for (auto move : moves)
 	{
@@ -26,9 +26,9 @@ void AbstractBoardGame::makeMoves(std::vector<int>& moves)
 	}
 }
 
-void AbstractBoardGame::makeMove(int n)
+void AbstractBoardGame::makeMove(Move n)
 {
 	handleMakeMove(n);
-	moveHistory.push_back(n);
+	moveHistory.addMove(n);
 	moveCounter++;
 }

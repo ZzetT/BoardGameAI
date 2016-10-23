@@ -4,12 +4,17 @@
 #include <vector>
 #include <memory>
 #include "MoveList.h"
+#include "types.h"
 
 
 class AbstractBoardGame
 {
 protected:
 	MoveList moveHistory;
+	auto getMoveHistory() const
+	{
+		return (const MoveList*)&moveHistory;
+	}
 public:
 	int moveCounter = 0; // faster access compared to moveHistory.size()
 
@@ -24,6 +29,11 @@ public:
 	*/
 	virtual uint64_t getHash() const = 0;
 
+	/**
+	* Returns the list of moves that were already made
+	*
+	* @return the move list
+	*/
 	const MoveList* getMoveHistory() { return &moveHistory; }
 
 	/**
@@ -40,10 +50,10 @@ public:
 	*/
 	int opponentPlayer() const { return currentPlayer() ^ 1; }
 
-	virtual void makeMove(int n) final;
+	virtual void makeMove(Move n) final;
 	virtual void undoMove() final;
 
-	void makeMoves(std::vector<int> &moves);
+	void makeMoves(std::vector<Move> &moves);
 
 	/**
 	* Checks if the current game state is a final node. A simple implementation might check if AbstractBoardGame#getMoves() is empty
@@ -71,7 +81,7 @@ public:
 	*
 	* @return the evaluation value for the current player
 	*/
-	virtual int evaluate() { return 0; }
+	virtual int16_t evaluate() { return 0; }
 
 	/**
 	* Evaluates if the last move has led to a winning position
@@ -79,8 +89,6 @@ public:
 	* @return true if the previous player won the game, otherwise false
 	*/
 	virtual bool hasWon() const = 0;
-
-	static const int WINNING_VALUE = 100000;
 
 protected:
 	/**
@@ -96,7 +104,7 @@ protected:
 	*
 	* @param move a move encoded as an integer
 	*/
-	virtual void handleMakeMove(int n) = 0;
+	virtual void handleMakeMove(Move n) = 0;
 
 };
 

@@ -11,7 +11,7 @@ Connect4Game::Connect4Game()
 {
 	color[0] = color[1] = 0L;
 	for (int i = 0; i<WIDTH; i++)
-		height[i] = H1*i;
+		height[i+1] = H1*i;
 }
 
 
@@ -24,7 +24,7 @@ uint64_t Connect4Game::getHash() const
 	return hash;
 }
 
-void Connect4Game::handleMakeMove(int n)
+void Connect4Game::handleMakeMove(Move n)
 {
 	color[currentPlayer()] ^= (uint64_t)1L << height[n];
 	this->hash ^= randomNumbers[currentPlayer()][height[n]];
@@ -34,7 +34,7 @@ void Connect4Game::handleMakeMove(int n)
 
 void Connect4Game::handleUndoMove()
 {
-	int n = moveHistory.back().move;
+	int n = moveHistory.lastMove().move;
 	--height[n];
 	color[opponentPlayer()] ^= (uint64_t)1L << height[n];
 	this->hash ^= randomNumbers[opponentPlayer()][height[n]];
@@ -58,13 +58,12 @@ bool Connect4Game::isPlayable(int col) const
 
 void Connect4Game::getMoves(MoveList* moves) const
 {
-	for (int col = 0; col < 7; col++)
+	for (int col = 1; col < 8; col++)
 	{
 		if (isPlayable(col)) {
-			moves->push_back(Move(col, col < 4 ? col : (6-col)));
+				moves->addMove(col, 4 - abs(4 - col));
 		}
 	}
-	moves->sort();
 }
 
 bool Connect4Game::calculateHaswon()
@@ -86,15 +85,15 @@ bool Connect4Game::calculateHaswon()
 
 std::ostream & operator<<(std::ostream &strm, const Connect4Game &game)
 {
-	strm << game.getHash() << endl;
+	strm << "hash: " << game.getHash() << endl;
 	strm << "current moves: ";
-	for (auto move : game.moveHistory)
+	for (auto move : *game.getMoveHistory()->data())
 	{
 		strm << move << ",";
 	}
 	strm << endl;
-	for (int w = 0; w < WIDTH; w++) {
-		if (w > 0)
+	for (int w = 1; w <= WIDTH; w++) {
+		if (w > 1)
 		{
 			strm << " ";
 		}

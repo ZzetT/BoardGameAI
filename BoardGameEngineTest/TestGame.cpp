@@ -23,7 +23,7 @@ uint64_t TestGame::getHash() const
 }
 
 
-void TestGame::handleMakeMove(int n)
+void TestGame::handleMakeMove(Move n)
 {
 	moveHistory[depth] = n;
 	nodeName.push_back('A' + n);
@@ -43,16 +43,17 @@ bool TestGame::isGameOver() const
 
 void TestGame::getMoves(MoveList* moves) const
 {
-	moves->push_back(0);
-	moves->push_back(1);
+	moves->addMove(0);
+	moves->addMove(1);
 	if (depth != 1)
 	{
-		moves->push_back(2);
+		moves->addMove(2);
 	}
 }
 
-int TestGame::evaluate()
+int16_t TestGame::evaluate()
 {
+	// simulate tree from https://de.wikipedia.org/wiki/Alpha-Beta-Suche#/media/File:Alpha_beta.png
 	int value = 0;
 	if (depth == 3)
 	{

@@ -17,7 +17,7 @@ void TraceOutput::makeMove(int move)
 	std::stringstream ss;
 	ss << *currentGame->getMoveHistory();
 	std::string name = ss.str();
-	currentNode = (currentNode->childs[move] = std::make_unique<TraceOutputNode>(name, currentNode)).get();
+	currentNode = currentNode->addChild(move, std::make_unique<TraceOutputNode>(name, currentNode));
 
 }
 
@@ -55,9 +55,9 @@ void printNode(std::ostream &out, TraceOutputNode *entry, int indent)
 		<< std::to_string(entry->value) << ", "
 		<< std::to_string(entry->beta) << "]"
 		<< std::endl;
-	for (auto& child : entry->childs)
+	for (auto& move : entry->moves)
 	{
-		printNode(out, child.second.get(), indent + 2);
+		printNode(out, entry->getChild(move), indent + 2);
 	}
 }
 

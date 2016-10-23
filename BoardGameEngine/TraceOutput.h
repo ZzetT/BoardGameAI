@@ -24,7 +24,7 @@ public:
 	virtual void undoMove() override;
 	virtual void startAlphaBetaSearch(unsigned int depth) override;
 	virtual void tracePositionValue(int value) override;
-	virtual void startIterativeSearch(const std::shared_ptr<AbstractBoardGame>& game) override { this->currentGame = game; }
+	virtual void startSearch(const std::shared_ptr<AbstractBoardGame>& game) override { this->currentGame = game; }
 	virtual void alphaBetaWindow(int alpha, int beta) override;
 	friend std::ostream& operator<<(std::ostream&, const TraceOutput&);
 
