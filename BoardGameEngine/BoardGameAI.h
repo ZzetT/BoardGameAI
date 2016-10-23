@@ -249,12 +249,16 @@ struct AIBuilder_t
 {
 	constexpr AIBuilder_t() {}
 
+	// depth-first search is run repeatedly with increasing depth limits
 	constexpr auto iterativeDeepening() const -> AIBuilder_t<options | AIOptions::Iterate, tTableSizeMB, MOVE_NONE> { return{}; }
+	// will save the game tree (only required for debugging)
 	constexpr auto doTracing() const -> AIBuilder_t<options | AIOptions::DoTrace, tTableSizeMB, MOVE_NONE> { return{}; }
+	// because moves are represented as integer values '0' is reserved for 'no move', calling setMoveNone<255>() would change this to 255
 	template<int none> constexpr auto setMoveNone() const -> AIBuilder_t<options, tTableSizeMB, none> { return{}; }
+	// enable transposition tables, the default size is 128MB, it can be changed by calling useTTable<512>() to change it to 512MB
 	template<int size = 128> constexpr auto useTTable() const -> AIBuilder_t<options, size, MOVE_NONE> { return{}; }
 
-
+	// use this method to create a BoardGameAI class with the specified options
 	constexpr BoardGameAI<options, tTableSizeMB, MOVE_NONE> create() const { return{}; }
 };
 using AIBuilder = AIBuilder_t<>;
