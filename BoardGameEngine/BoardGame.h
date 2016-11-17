@@ -7,6 +7,12 @@
 #include "MoveList.h"
 #include "types.h"
 
+/*
+ * The design for this class is based on the "Curiously recurring template pattern"
+ * to save the runtime overhead of virtual functions.
+ * See https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern for more details
+ */
+
 template <typename DerivedBoardGame>
 class BoardGame
 {
