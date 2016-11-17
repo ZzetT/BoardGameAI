@@ -6,6 +6,7 @@ The goal is to provide an
 - efficient
 
 alpha beta pruning framework to implement an artifical intelligence for any zero-sum game.
+
 The main idea is to clearly seperate between the search algoritm (incl. enhancements) and the domain specific game knowledge. Thus, making it easy to reuse the library for any board game. Any feature like iterative deepening, transposition tables, heuristic etc. can be enabled and disabled at compile time to provide the highest efficiency for every possible feature combination.
 
 #Compiling
