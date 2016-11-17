@@ -19,7 +19,7 @@ Of course, you can try to use this framework as a base for a general game player
 #Getting started
 1. Write a zero-sum game `MyGame` by inheriting from `BoardGame<MyGame>` (see Connect4Game.cpp for an example)
 2. Implement the minimal set of methods: `getMoves_impl()`, `hasWon_impl()`, `isGameOver_impl()`, `makeMove_impl()`, `undoMove_impl()`
-3. Create an AI by using the `AIBuilder` class: `auto ai = AIBuilder{}.iterativeDeepening().useTTable().create();` (see `AIBuilder_t` class for more options)
+3. Create an AI by using the `AIBuilder` class: `auto ai = AIBuilder<MyGame>{}.iterativeDeepening().useTTable().create();` (see `AIBuilder_t` class for more options)
 4. Search the whole game tree by calling: `SearchResult result = ai.search(game);` or by defining a depth and/or a  limit: `ai.search(game, INT_MAX, 3000); /* search for 3 seconds with an infinite depth` 
 5. `result` contains the position score and the best move
 
