@@ -11,9 +11,22 @@ class MoveList
 private:
 	std::vector<ExtMove> moves;
 public:
-	MoveList();
-	~MoveList();
-	friend std::ostream & operator<<(std::ostream & Str, MoveList const & v);
+	MoveList()
+	{
+
+	}
+	~MoveList()
+	{
+
+	}
+	friend std::ostream & operator<<(std::ostream & out, MoveList const & moveList)
+	{
+		for (auto& move : moveList.moves)
+		{
+			out << std::to_string(move.move);
+		}
+		return out;
+	}
 	void clear() {
 		moves.clear();
 	}
@@ -45,5 +58,5 @@ public:
 	{
 		moves.pop_back();
 	}
-	
+
 };

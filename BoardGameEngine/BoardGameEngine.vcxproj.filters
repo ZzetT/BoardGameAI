@@ -24,9 +24,6 @@
     <ClInclude Include="BoardGameAI.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="AbstractBoardGame.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Trace.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -51,24 +48,15 @@
     <ClInclude Include="TTableReplaceByDepth.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="BoardGame.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="AbstractBoardGame.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Trace.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="TraceOutput.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="TraceOutputNode.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="MoveList.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

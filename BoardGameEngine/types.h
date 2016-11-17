@@ -36,3 +36,7 @@ public:
 inline bool operator<(const ExtMove& f, const ExtMove& s) {
 	return f.value < s.value;
 }
+
+#define ITERATE_ENABLED(o) ((o & AIOptions::Iterate) != 0)
+#define HISTORY_ENABLED(o) ((o & AIOptions::HistoryHeuristic) != 0)
+#define TIMER_ENABLED(o) ((o & AIOptions::TimeManagement) != 0)

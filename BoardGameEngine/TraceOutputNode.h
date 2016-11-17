@@ -10,11 +10,11 @@ class TraceOutputNode
 private:
 	std::map<int, std::unique_ptr<TraceOutputNode>> childs;
 public:
-	TraceOutputNode* parent;
 	std::string name;
+	TraceOutputNode* parent;
+	int value;
 	int alpha;
 	int beta;
-	int value;
 	std::vector<int> moves;
 
 	TraceOutputNode();

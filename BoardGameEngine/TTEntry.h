@@ -13,14 +13,14 @@
 struct TTEntry {
 
 public:
-	void save(uint32_t k, int16_t v, Bound b, uint16_t d, Move m, int g) {
+	void save(uint32_t k, int16_t v, Bound b, uint16_t d, Move m, uint8_t g) {
 
 		key32 = k;
 		move16 = m;
 		bound8 = b;
-		generation8 = (uint8_t)g;
+		generation8 = g;
 		value16 = v;
-		depth16 = (int16_t)d;
+		depth16 = d;
 	}
 
 	uint32_t key() const { return key32; }
@@ -28,7 +28,9 @@ public:
 	Bound bound() const { return bound8; }
 	int16_t value() const { return value16; }
 	uint16_t depth() const { return depth16; }
+	uint8_t generation() const { return generation8; }
 
+private:
 	uint32_t key32;
 	Move move16;
 	Bound bound8;
