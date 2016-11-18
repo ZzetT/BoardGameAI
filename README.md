@@ -48,6 +48,7 @@ The repository consist of 4 main folders/projects:
 - killer moves
 - support for more than two player games
 - multi threaded
+- support position book (e.g. opening book)
 
 #Supported Games
 - Connect Four 
