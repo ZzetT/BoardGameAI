@@ -46,6 +46,8 @@ The repository consist of 4 main folders/projects:
 - quiescence search
 - other transposition table implementations (two big, replace always etc)
 - killer moves
+- support for more than two player games
+- multi threaded
 
 #Supported Games
 - Connect Four 
