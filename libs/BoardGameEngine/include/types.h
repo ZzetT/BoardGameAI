@@ -37,6 +37,18 @@ inline bool operator<(const ExtMove& f, const ExtMove& s) {
 	return f.value < s.value;
 }
 
+namespace AIOptions
+{
+	enum {
+		None =				1 << 0,
+		DoTrace =			1 << 1, // trace steps during search
+		Iterate =			1 << 2, // iterative deepening
+		Evaluate =			1 << 3, // use evaluation function of game
+		HistoryHeuristic =  1 << 4, // use history heuristics
+		TimeManagement =	1 << 5 // cancel search after time is over
+	};
+}
+
 #define ITERATE_ENABLED(o) ((o & AIOptions::Iterate) != 0)
 #define HISTORY_ENABLED(o) ((o & AIOptions::HistoryHeuristic) != 0)
 #define TIMER_ENABLED(o) ((o & AIOptions::TimeManagement) != 0)

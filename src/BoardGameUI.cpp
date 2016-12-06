@@ -1,7 +1,4 @@
-// BoardGameUI.cpp : Defines the entry point for the console application.
-//
 
-#include "stdafx.h"
 #include "Connect4Game.h"
 #include "BoardGameAI.h"
 #include <iostream>

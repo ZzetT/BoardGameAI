@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Connect4Game.h"
 #include <string>
 

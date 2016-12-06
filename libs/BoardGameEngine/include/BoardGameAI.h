@@ -6,6 +6,7 @@
 #include "MovePicker.h"
 #include <chrono>
 #include <iostream>
+#include <cstring>
 
 
 //TODO: change to real functions
@@ -17,18 +18,6 @@
 #define TRACE_UNDO_MOVE() TRACE_IF(trace->undoMove())
 #define TRACE_START_SEARCH(game) TRACE_IF(trace->startSearch(game))
 #define TRACE_ALPHA_BETA_WINDOW(alpha, beta) TRACE_IF(trace->alphaBetaWindow(alpha, beta))
-
-namespace AIOptions
-{
-	enum {
-		None =				1 << 0,
-		DoTrace =			1 << 1, // trace steps during search
-		Iterate =			1 << 2, // iterative deepening
-		Evaluate =			1 << 3, // use evaluation function of game
-		HistoryHeuristic =  1 << 4, // use history heuristics
-		TimeManagement =	1 << 5 // cancel search after time is over
-	};
-}
 
 //TODO: add positiion in book
 
@@ -105,11 +94,11 @@ private:
 	{
 		if constexpr(tTableSizeMB > 0)
 		{
-			tTable->new_search();
+			this->tTable->new_search();
 		}
 		if constexpr(HISTORY_ENABLED(options))
 		{
-			memset(historyTable, 0, sizeof(historyTable));
+			memset(this->historyTable, 0, sizeof(this->historyTable));
 		}
 	}
 
@@ -123,7 +112,7 @@ private:
 
 		if constexpr(TIMER_ENABLED(options))
 		{
-			if ((maxTime > 0) && (++nextTimeCheck % timeCheckInterval) == 0 && std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - startTime).count() >= maxTime)
+			if ((this->maxTime > 0) && (++this->nextTimeCheck % this->timeCheckInterval) == 0 && std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - this->startTime).count() >= this->maxTime)
 			{
 				abortSearch = true;
 				return 0;
@@ -141,7 +130,7 @@ private:
 		if constexpr(tTableSizeMB > 0)
 		{
 			hash = game->getHash();
-			const TTEntry* ttEntry = tTable->probe(hash);
+			const TTEntry* ttEntry = this->tTable->probe(hash);
 			if (ttEntry != nullptr)
 			{
 				if (ttEntry->depth() > depthLeft)
@@ -229,12 +218,12 @@ private:
 						moveIdx++;
 						if (historyMove == bestMove)
 						{
-							historyTable[game->currentPlayer()][game->mapMoveToHistoryState(historyMove)] += moveIdx;
+							this->historyTable[game->currentPlayer()][game->mapMoveToHistoryState(historyMove)] += moveIdx;
 							break;
 						}
 						else
 						{
-							historyTable[game->currentPlayer()][game->mapMoveToHistoryState(historyMove)]--;
+							this->historyTable[game->currentPlayer()][game->mapMoveToHistoryState(historyMove)]--;
 						}
 					}
 				}
@@ -243,7 +232,7 @@ private:
 
 		if constexpr(tTableSizeMB > 0)
 		{
-			tTable->store(hash, bestValue, bestValue <= alphaOrig ? BOUND_UPPER : (bestValue >= beta ? BOUND_LOWER : BOUND_EXACT), depthLeft, bestMove);
+			this->tTable->store(hash, bestValue, bestValue <= alphaOrig ? BOUND_UPPER : (bestValue >= beta ? BOUND_LOWER : BOUND_EXACT), depthLeft, bestMove);
 		}
 		TRACE_POSITION_VALUE(bestValue);
 		return bestValue;
@@ -259,7 +248,7 @@ private:
 		initializeSearch();
 		if constexpr(TIMER_ENABLED(o))
 		{
-			startTime = std::chrono::system_clock::now();
+			this->startTime = std::chrono::system_clock::now();
 		}
 
 
