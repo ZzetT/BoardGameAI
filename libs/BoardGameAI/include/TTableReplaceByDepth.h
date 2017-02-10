@@ -8,7 +8,7 @@ template<int mbSize>
 class TTableReplaceByDepth
 {
 private:
-	static const size_t elements = mbSize * 1024 * 1024 / sizeof(TTEntry);
+	static const size_t elements = (mbSize == 0 ? 1 /* dummy element */ : mbSize * 1024 * 1024 / sizeof(TTEntry));
 	std::array<TTEntry, elements> table;
 	int generation = 0;
 public:

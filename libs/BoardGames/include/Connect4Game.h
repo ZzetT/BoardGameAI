@@ -27,7 +27,6 @@ private:
 	std::array<int, WIDTH+1> height; // holds bit index of lowest free square
 	static const std::array<std::array<uint64_t, 48>, 2> randomNumbers;
 	bool won = false;
-	const std::array<int, 7> orderedMoves = { { 4,3,5,2,6,1,7 } };
 
 	bool calculateHaswon();
 

@@ -35,18 +35,7 @@ int main()
 				cout << "AI is calculating next move..." << endl;
 				SearchResult result = ai.search(game, INT_MAX, 3000);
 				game->makeMove(result.bestMove);
-				if (result.value >= WINNING_IN_MAX_PLY)
-				{
-					winningInMoves = (WINNING_VALUE - result.value - game->moveCounter + 1) / 2;
-				}
-				else if (result.value <= -WINNING_IN_MAX_PLY)
-				{
-					winningInMoves = -(WINNING_VALUE + result.value - game->moveCounter + 1) / 2;
-				}
-				else
-				{
-					winningInMoves = 0;
-				}
+				winningInMoves = result.getWinInMoves();
 				break;
 			}
 			else

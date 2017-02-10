@@ -2,10 +2,10 @@
 cmake_minimum_required(VERSION 3.0.0)
 
 set(PROJECT_NAME
-    BoardGameEngineLibrary
+    BoardGameAILibrary
 )
 set(LIBRARY_NAME
-    BoardGameEngine
+    BoardGameAI
 )
 set(LIBRARY_HEADERS_DIR
     include

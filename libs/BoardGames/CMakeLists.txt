@@ -27,8 +27,8 @@ add_library(${LIBRARY_NAME} STATIC
     ${LIBRARY_SOURCE}
 )
 
-target_include_directories(${LIBRARY_NAME} PUBLIC include)
-target_link_libraries(${LIBRARY_NAME} BoardGameEngine)
+target_include_directories(${LIBRARY_NAME} PUBLIC ${LIBRARY_HEADERS_DIR})
+target_link_libraries(${LIBRARY_NAME} BoardGameAI)
 
 #target_include_directories(${LIBRARY_NAME} PRIVATE
 #    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${LIBRARY_NAME}>

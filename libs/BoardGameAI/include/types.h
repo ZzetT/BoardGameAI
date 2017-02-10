@@ -43,12 +43,18 @@ namespace AIOptions
 		None =				1 << 0,
 		DoTrace =			1 << 1, // trace steps during search
 		Iterate =			1 << 2, // iterative deepening
-		Evaluate =			1 << 3, // use evaluation function of game
-		HistoryHeuristic =  1 << 4, // use history heuristics
-		TimeManagement =	1 << 5 // cancel search after time is over
+		HistoryHeuristic =  1 << 3, // use history heuristics
+		TimeManagement =	1 << 4 // cancel search after time is over
 	};
 }
 
 #define ITERATE_ENABLED(o) ((o & AIOptions::Iterate) != 0)
 #define HISTORY_ENABLED(o) ((o & AIOptions::HistoryHeuristic) != 0)
 #define TIMER_ENABLED(o) ((o & AIOptions::TimeManagement) != 0)
+
+//define IF_CONSTEXPR_AVAILABLE if "constexpr if" feature from C++17 is available
+#ifdef IF_CONSTEXPR_AVAILABLE
+#define STATIC_IF(x) if constexpr(x)
+#else
+#define STATIC_IF(x) if (x) /* if x is a template parameter, the compiler should optimize at compile time */
+#endif

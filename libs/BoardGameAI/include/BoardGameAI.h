@@ -5,7 +5,6 @@
 #include "TTableReplaceByDepth.h"
 #include "MovePicker.h"
 #include <chrono>
-#include <iostream>
 #include <cstring>
 
 
@@ -19,66 +18,31 @@
 #define TRACE_START_SEARCH(game) TRACE_IF(trace->startSearch(game))
 #define TRACE_ALPHA_BETA_WINDOW(alpha, beta) TRACE_IF(trace->alphaBetaWindow(alpha, beta))
 
-//TODO: add positiion in book
-
 //TODO: store result locally in BoardGameAI class?
 class SearchResult
 {
 public:
-	SearchResult(int16_t value, Move bestMove, int16_t depth) : value(value), bestMove(bestMove), depth(depth) {}
+	SearchResult(int16_t value, Move bestMove, int16_t depth, int moveCounter) : value(value), bestMove(bestMove), depth(depth), moveCounter(moveCounter) {}
 	int16_t value;
 	Move bestMove;
 	int16_t depth;
+	int moveCounter;
+	int getWinInMoves()
+	{
+		if (value >= WINNING_IN_MAX_PLY)
+		{
+			return (WINNING_VALUE - value - moveCounter + 1) / 2;
+		}
+		else if (value <= -WINNING_IN_MAX_PLY)
+		{
+			return -(WINNING_VALUE + value - moveCounter + 1) / 2;
+		}
+		return 0;
+	}
 };
-
-template<class GameType, bool enable>
-class HistoryTableData
-{
-protected:
-	int historyTable[2][BoardGame<GameType>::getHistoryStates()];
-};
-
-template<class GameType>
-class HistoryTableData<GameType, false>
-{
-
-};
-
-template<int tTableSizeMB>
-class TTableData
-{
-protected:
-	std::unique_ptr<TTableReplaceByDepth<tTableSizeMB>> tTable = std::make_unique<TTableReplaceByDepth<tTableSizeMB>>(); // transposition table
-};
-
-template<>
-class TTableData<0>
-{
-
-};
-
-template<bool enable>
-class TimeManagementData
-{
-protected:
-	std::chrono::time_point<std::chrono::system_clock> startTime;
-	const int timeCheckInterval = 10000; // specifies after how many searched nodes the time is checked
-	int nextTimeCheck; // incremented with every new node to search, time is checked if nextTimeCheck % timeCheckInterval == 0
-	int maxTime; // maximum time to search in milli seconds
-};
-
-template<>
-class TimeManagementData<false>
-{
-
-};
-
 
 template<class GameType, int options, int tTableSizeMB>
-class BoardGameAI :
-	public HistoryTableData<GameType, HISTORY_ENABLED(options)>,
-	public TTableData<tTableSizeMB>,
-	public TimeManagementData<TIMER_ENABLED(options)>
+class BoardGameAI 
 {
 private:
 	std::shared_ptr<BoardGame<GameType>> game;
@@ -90,13 +54,26 @@ private:
 	bool depthReached; // flag shows if the last iteration reached the full depth, if not it's not necessary to search one level deeper
 	static const int MOVE_NONE = BoardGame<GameType>::getNoMoveValue();
 
+	//time management data
+	std::chrono::time_point<std::chrono::system_clock> startTime;
+	const int timeCheckInterval = 10000; // specifies after how many searched nodes the time is checked
+	int nextTimeCheck; // incremented with every new node to search, time is checked if nextTimeCheck % timeCheckInterval == 0
+	int maxTime; // maximum time to search in milli seconds
+
+	//transposition table
+	std::unique_ptr<TTableReplaceByDepth<tTableSizeMB>> tTable = std::make_unique<TTableReplaceByDepth<tTableSizeMB>>(); // transposition table
+
+	//history table
+	int historyTable[2][BoardGame<GameType>::getHistoryStates()];
+
 	void initializeSearch()
 	{
-		if constexpr(tTableSizeMB > 0)
+		//if constexpr(tTableSizeMB > 0)
+		STATIC_IF(tTableSizeMB > 0)
 		{
 			this->tTable->new_search();
 		}
-		if constexpr(HISTORY_ENABLED(options))
+		STATIC_IF(HISTORY_ENABLED(options))
 		{
 			memset(this->historyTable, 0, sizeof(this->historyTable));
 		}
@@ -110,7 +87,7 @@ private:
 			return 0;
 		}
 
-		if constexpr(TIMER_ENABLED(options))
+		STATIC_IF(TIMER_ENABLED(options))
 		{
 			if ((this->maxTime > 0) && (++this->nextTimeCheck % this->timeCheckInterval) == 0 && std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - this->startTime).count() >= this->maxTime)
 			{
@@ -125,9 +102,7 @@ private:
 		uint64_t hash;
 		Move bestMove = MOVE_NONE;
 
-		nodes++;
-
-		if constexpr(tTableSizeMB > 0)
+		STATIC_IF(tTableSizeMB > 0)
 		{
 			hash = game->getHash();
 			const TTEntry* ttEntry = this->tTable->probe(hash);
@@ -138,7 +113,7 @@ private:
 					depthReached = true;
 					if (ttEntry->bound() == BOUND_EXACT)
 					{
-						if constexpr(isRoot)
+						STATIC_IF(isRoot)
 						{
 							bestRootMoveTmp = ttEntry->move();
 						}
@@ -180,6 +155,7 @@ private:
 		while ((move = movePicker.nextMove()) != MOVE_NONE)
 		{
 			game->makeMove(move);
+			nodes++;
 			TRACE_MAKE_MOVE(move);
 			int16_t value = -alphaBeta<false>(depthLeft - 1, -beta, -alpha);
 			game->undoMove();
@@ -199,7 +175,7 @@ private:
 			{
 				bestValue = value;
 				bestMove = move;
-				if constexpr(isRoot)
+				STATIC_IF(isRoot)
 				{
 					bestRootMoveTmp = move;
 				}
@@ -207,7 +183,7 @@ private:
 				{
 					alpha = value;
 				}
-				if constexpr(HISTORY_ENABLED(options))
+				STATIC_IF(HISTORY_ENABLED(options))
 				{
 					// same algorithm as used by J. Tromp
 					int moveIdx = 0;
@@ -230,7 +206,7 @@ private:
 			}
 		}
 
-		if constexpr(tTableSizeMB > 0)
+		STATIC_IF(tTableSizeMB > 0)
 		{
 			this->tTable->store(hash, bestValue, bestValue <= alphaOrig ? BOUND_UPPER : (bestValue >= beta ? BOUND_LOWER : BOUND_EXACT), depthLeft, bestMove);
 		}
@@ -246,7 +222,7 @@ private:
 		int bestMove = MOVE_NONE;
 		depthReached = true;
 		initializeSearch();
-		if constexpr(TIMER_ENABLED(o))
+		STATIC_IF(TIMER_ENABLED(o))
 		{
 			this->startTime = std::chrono::system_clock::now();
 		}
@@ -261,7 +237,7 @@ private:
 			while (movesCache.size() <= currentMaxDepth) movesCache.push_back(std::make_unique<MoveList>());
 
 
-			std::cout << "depth " << currentMaxDepth;
+			//std::cout << "depth " << currentMaxDepth;
 			TRACE_START_ALPHA_BETA_SEARCH(currentMaxDepth);
 			depthReached = false;
 			int scoreTmp = alphaBeta<true>(currentMaxDepth, -INFINITE, INFINITE);
@@ -273,13 +249,13 @@ private:
 				score = scoreTmp;
 			}
 			//TODO: remove direct output and use an optional logger class 
-			std::cout << " best move: " << bestMove << " score: " << score;
-			std::cout << "\r";
-			flush(std::cout);
+			//std::cout << " best move: " << bestMove << " score: " << score;
+			//std::cout << "\r";
+			//flush(std::cout);
 
 		}
 		TRACE_FINISH_SEARCH();
-		return SearchResult(score, bestMove, currentMaxDepth);
+		return SearchResult(score, bestMove, currentMaxDepth, game->moveCounter);
 	}
 
 	template<int o = options, std::enable_if_t<!ITERATE_ENABLED(o)>* = nullptr>
@@ -291,35 +267,24 @@ private:
 		TRACE_START_ALPHA_BETA_SEARCH(1);
 		int16_t score = alphaBeta<true>(maxDepth, -INFINITE, INFINITE);
 		TRACE_FINISH_SEARCH();
-		return SearchResult(score, bestRootMoveTmp, maxDepth);
+		return SearchResult(score, bestRootMoveTmp, maxDepth, game->moveCounter);
 	}
 	int16_t evaluatePosition()
 	{
-		if (game->hasWon())
-		{
-			int value = -(WINNING_VALUE - game->moveCounter);
-			TRACE_POSITION_VALUE(value);
-			return value;
-		}
-		if constexpr(options & AIOptions::Evaluate)
-		{
-			TRACE_POSITION_VALUE(game->evaluate());
-			return game->evaluate();
-		}
-		TRACE_POSITION_VALUE(0);
-		return 0;
+		TRACE_POSITION_VALUE(game->evaluate());
+		return game->evaluate();
 	}
 
 public:
 	BoardGameAI() {}
-	BoardGameAI(const BoardGameAI<GameType, options, tTableSizeMB>& other) {}
+	BoardGameAI(const BoardGameAI<GameType, options, tTableSizeMB>& other) { (void)other; }
 	~BoardGameAI() {}
 
 	SearchResult search(const std::shared_ptr<BoardGame<GameType>>& gameArgument, unsigned int maxDepth = MAX_PLY, unsigned int maxTime = 0)
 	{
 		this->game = gameArgument;
 		abortSearch = false;
-		if constexpr(TIMER_ENABLED(options))
+		STATIC_IF(TIMER_ENABLED(options))
 		{
 			this->maxTime = maxTime;
 		}
@@ -334,6 +299,10 @@ public:
 	uint64_t getAnalyzedPositions() const
 	{
 		return nodes;
+	}
+	void resetAnalyzedPositionsCounter()
+	{
+		nodes = 0;
 	}
 	friend class MovePicker<BoardGameAI<GameType, options, tTableSizeMB>, GameType, options>;
 };
@@ -351,8 +320,6 @@ struct AIBuilder_t
 	constexpr auto iterativeDeepening() const -> AIBuilder_t<GameType, options | AIOptions::Iterate, tTableSizeMB> { return{}; }
 	// will save the game tree (only required for debugging)
 	constexpr auto doTracing() const -> AIBuilder_t<GameType, options | AIOptions::DoTrace, tTableSizeMB> { return{}; }
-	// if the node is not a final node then call the evaluation function of the game
-	constexpr auto useEvaluationFunction() const -> AIBuilder_t<GameType, options | AIOptions::Evaluate, tTableSizeMB> { return{}; }
 	// uses history heuristics
 	constexpr auto useHistoryHeuristic() const -> AIBuilder_t<GameType, options | AIOptions::HistoryHeuristic, tTableSizeMB> { return{}; }
 	// enable transposition tables, the default size is 128MB, it can be changed by calling useTTable<512>() to change it to 512MB

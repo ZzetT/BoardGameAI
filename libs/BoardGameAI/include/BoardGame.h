@@ -22,6 +22,17 @@ public:
 	int moveCounter = 0; // faster access compared to moveHistory.size()
 
 	/**
+	* Clears the state of the board game by undoing all moves.
+	*/
+	void clear()
+	{
+		while (moveCounter > 0)
+		{
+			undoMove();
+		}
+	}
+
+	/**
 	* A 64bit hash value for the given position which is used for transposition table.
 	* See "Zobrist Hashing" for more information.
 	*
@@ -129,6 +140,14 @@ public:
 	int16_t evaluate() const
 	{
 		return static_cast<const DerivedBoardGame*>(this)->evaluate_impl();
+	}
+	int16_t evaluate_impl() const
+	{
+		if (hasWon()) 
+		{
+			return -(WINNING_VALUE - moveCounter); //negative because previous player's move won , current player lost
+		}
+		return 0;
 	}
 
 	/**

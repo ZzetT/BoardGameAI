@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 
 set(TEST_PROJECT_NAME
-    BoardGameTests
+    TestBoardGames
 )
 set(LIBRARY_TESTS_SOURCE
     Connect4LogicTest.cpp

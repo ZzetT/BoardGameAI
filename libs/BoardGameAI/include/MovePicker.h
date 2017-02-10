@@ -16,7 +16,7 @@ class MovePicker
 {
 public:
 	MovePicker(const AIType& ai, const std::shared_ptr<BoardGame<GameType>>& game, Move ttMove, MoveList *moves)
-		: ai(ai), game(game), ttMove(ttMove), moves(moves)
+		: game(game), ai(ai), ttMove(ttMove), moves(moves)
 	{
 		state = (ttMove == MOVE_NONE ? GENERATE_MOVES : TTMOVE);
 	}
@@ -45,7 +45,7 @@ public:
 		case GENERATE_MOVES:
 			moves->clear();
 			game->getMoves(moves);
-			if constexpr(HISTORY_ENABLED(options))
+			STATIC_IF(HISTORY_ENABLED(options))
 			{
 				for (auto it = moves->data()->begin(); it != moves->data()->end(); ++it)
 				{
@@ -73,10 +73,10 @@ public:
 
 private:
 	const std::shared_ptr<BoardGame<GameType>> game;
+	const AIType& ai;
 	Move ttMove;
 	State state;
 	MoveList *moves;
-	const AIType& ai;
 	static const int MOVE_NONE = BoardGame<GameType>::getNoMoveValue();
 
 	std::vector<ExtMove>::iterator moveIter;
