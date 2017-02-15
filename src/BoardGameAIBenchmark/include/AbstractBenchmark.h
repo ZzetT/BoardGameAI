@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <string>
 
+const char PATH_SEPERATOR = '/';
+
 class AbstractBenchmark
 {
 private:

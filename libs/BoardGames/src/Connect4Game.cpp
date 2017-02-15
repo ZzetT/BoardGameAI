@@ -62,7 +62,7 @@ void Connect4Game::getMoves_impl(MoveList* moves) const
 	{
 		if (isPlayable(move))
 		{
-			moves->addMove(move, fieldValues[height[move]]);
+			moves->addMove(move, fieldValues[move]);
 		}
 	}
 }

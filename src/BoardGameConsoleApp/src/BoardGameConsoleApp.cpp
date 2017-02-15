@@ -18,7 +18,7 @@ int main()
 {
 	std::shared_ptr<Connect4Game> game = std::make_shared<Connect4Game>();
 	std::unique_ptr<MoveList> moves = std::make_unique<MoveList>();
-	auto ai = AIBuilder<Connect4Game>{}.iterativeDeepening().useTTable().useHistoryHeuristic().enableTimeManagement().create();
+	auto ai = AIBuilder<Connect4Game>{}.iterativeDeepening().useTTable().enableTimeManagement().create();
 	string input;
 
 	cout << "1-7: move c: ai move" << endl;

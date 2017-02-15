@@ -12,8 +12,8 @@ private:
 	std::shared_ptr<AIType> ai;
 
 public:
-	LiveBenchmark(const std::shared_ptr<AIType>& ai, std::string name, bool overwrite = false) :
-		RecordedBenchmark(name, std::fstream::in | std::fstream::out | (overwrite ? std::fstream::trunc : std::fstream::app)),
+	LiveBenchmark(const std::shared_ptr<AIType>& ai, std::string directory, std::string name, bool overwrite = false) :
+		RecordedBenchmark(directory, name, std::fstream::in | std::fstream::out | (overwrite ? std::fstream::trunc : std::fstream::app)),
 		ai(ai)
 	{
 	}

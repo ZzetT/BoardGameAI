@@ -14,9 +14,9 @@ protected:
 
 
 public:
-	RecordedBenchmark(std::string name, int mode = std::fstream::in) : AbstractBenchmark(name)
+	RecordedBenchmark(std::string directory, std::string name, int mode = std::fstream::in) : AbstractBenchmark(name)
 	{
-		const std::string filename = name + ".csv";
+		const std::string filename = directory + PATH_SEPERATOR + name + ".csv";
 		cacheFile.open(filename, mode);
 		if (cacheFile.is_open())
 		{
