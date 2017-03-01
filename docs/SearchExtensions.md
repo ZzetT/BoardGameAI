@@ -64,12 +64,15 @@ void searchIterative(unsigned int maxDepth)
   while (currentMaxDepth < maxDepth && currentMaxDepth < MAX_PLY)
   {
     currentMaxDepth++;
-    while (movesCache.size() <= currentMaxDepth) movesCache.push_back(std::make_unique<MoveList>());
 
     int score = alphaBeta<true>(currentMaxDepth, -INFINITE, INFINITE);
   }
 }
 ```
+More information can be found here:
+https://en.wikipedia.org/wiki/Negamax
+
+Usage: `AIBuilder<MyGame>{}.iterativeDeepening();`
 
 ## Transposition Table
 
@@ -97,7 +100,7 @@ This is currently the only supported option. The table entry is only replaced if
 ## Principal Variation Search
 
 More information can be found here:
-https://chessprogramming.wikispaces.com/Principal+Variation
+https://chessprogramming.wikispaces.com/Principal+Variation+Search
 
 Usage: `AIBuilder<Connect4Game>{}.usePVS();`
 

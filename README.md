@@ -19,7 +19,7 @@ The main idea is to clearly seperate between the search algoritm (incl. enhancem
 4. Search the whole game tree by calling: `SearchResult result = ai.search(game);` or by defining a depth and/or a  limit: `ai.search(game, INT_MAX, 3000); /* search for 3 seconds with an infinite depth`
 5. `result` contains the position score and the best move
 
-A more detailed documentation about the search extensions can be found here: https://github.com/ZzetT/BoardGameAI/tree/master/docs/SearchExtensions.md
+A more detailed documentation about the search extensions can be found here: [SearchExtensions documentation](https://github.com/ZzetT/BoardGameAI/tree/master/docs/SearchExtensions.md)
 
 ## Repository Structure
 The repository consist of 4 main folders/projects:
