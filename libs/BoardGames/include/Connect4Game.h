@@ -7,7 +7,7 @@
 #include "BoardGame.h"
 
 
-class Connect4Game : public BoardGame<Connect4Game>
+class Connect4Game : public BoardGame<Connect4Game, 8, 50>
 {
 private:
 	static const int WIDTH = 7;
@@ -26,6 +26,7 @@ private:
 	uint64_t hash = 0;
 	std::array<int, WIDTH+1> height; // holds bit index of lowest free square
 	static const std::array<std::array<uint64_t, 48>, 2> randomNumbers;
+	static const std::array<int, 8> Connect4Game::colValues;
 	bool won = false;
 
 	bool calculateHaswon();
@@ -42,7 +43,7 @@ public:
 	void makeMove_impl(Move n);
 	void undoMove_impl();
 	bool isGameOver_impl() const;
-	void getMoves_impl(MoveList* moves) const;
+	void getMoves_impl(MovesPerPositionType* moves) const;
 	bool hasWon_impl() const;
 	int mapMoveToHistoryState_impl(Move move) const;
 	constexpr static int getHistoryStates_impl()

@@ -11,22 +11,28 @@
  * The design for this class is based on the "Curiously recurring template pattern"
  * to save the runtime overhead of virtual functions.
  * See https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern for more details
+ *
+ * @param maxPosMoves can be set if the upper bound of moves for the (worst case) position is known (this avoids dynamic reallocation and increases the performance), 0 will use dynamic allocation
+ * @param maxHistoryMoves can be set if the upper bound of moves for a whole game is known (this avoids dynamic reallocation and increases the performance), 0 will use dynamic allocation
  */
 
-template <typename DerivedBoardGame>
+template <typename DerivedBoardGame, int maxPosMoves = 0, int maxHistoryMoves = 0>
 class BoardGame
 {
 protected:
-	MoveList moveHistory;
+	MoveList<maxHistoryMoves> moveHistory;
 public:
-	int moveCounter = 0; // faster access compared to moveHistory.size()
+	typedef MoveList<maxHistoryMoves> MoveHistoryType;
+	typedef MoveList<maxPosMoves> MovesPerPositionType;
+	static const int MAX_HISTORY_MOVES = maxHistoryMoves;
+
 
 	/**
 	* Clears the state of the board game by undoing all moves.
 	*/
 	void clear()
 	{
-		while (moveCounter > 0)
+		while (getMoveCounter() > 0)
 		{
 			undoMove();
 		}
@@ -48,7 +54,7 @@ public:
 	*
 	* @return the move list
 	*/
-	const MoveList* getMoveHistory()
+	const MoveHistoryType* getMoveHistory()
 	{
 		return &moveHistory;
 	}
@@ -60,7 +66,7 @@ public:
 	*/
 	int currentPlayer() const
 	{
-		return moveCounter & 1;
+		return getMoveCounter() & 1;
 	}
 
 	/**
@@ -83,7 +89,6 @@ public:
 		*/
 		static_cast<DerivedBoardGame*>(this)->makeMove_impl(n);
 		moveHistory.addMove(n);
-		moveCounter++;
 	}
 	void undoMove()
 	{
@@ -94,7 +99,6 @@ public:
 		*/
 		static_cast<DerivedBoardGame*>(this)->undoMove_impl();
 		moveHistory.undoMove();
-		moveCounter--;
 	}
 
 	void makeMoves(std::vector<Move> &moves)
@@ -121,7 +125,7 @@ public:
 	*
 	* @param moves all possible moves for current player
 	*/
-	void getMoves(MoveList* moves) const
+	void getMoves(MovesPerPositionType* moves) const
 	{
 		return static_cast<const DerivedBoardGame*>(this)->getMoves_impl(moves);
 	}
@@ -145,7 +149,7 @@ public:
 	{
 		if (hasWon()) 
 		{
-			return -(WINNING_VALUE - moveCounter); //negative because previous player's move won , current player lost
+			return -(WINNING_VALUE - getMoveCounter()); //negative because previous player's move won , current player lost
 		}
 		return 0;
 	}
@@ -193,6 +197,16 @@ public:
 	constexpr static int getNoMoveValue_impl()
 	{
 		return 0;
+	}
+
+	/**
+	* The number of moves that were already made.
+	*
+	* @return number of moves
+	*/
+	int getMoveCounter() const
+	{
+		return (int)moveHistory.size();
 	}
 
 };

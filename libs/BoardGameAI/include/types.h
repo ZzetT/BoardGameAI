@@ -44,12 +44,14 @@ namespace AIOptions
 		DoTrace =			1 << 1, // trace steps during search
 		Iterate =			1 << 2, // iterative deepening
 		HistoryHeuristic =  1 << 3, // use history heuristics
-		TimeManagement =	1 << 4 // cancel search after time is over
+		TimeManagement =	1 << 4, // cancel search after time is over
+		PVS =				1 << 5 // principial variation search
 	};
 }
 
 #define ITERATE_ENABLED(o) ((o & AIOptions::Iterate) != 0)
 #define HISTORY_ENABLED(o) ((o & AIOptions::HistoryHeuristic) != 0)
+#define PVS_ENABLED(o) ((o & AIOptions::PVS) != 0)
 #define TIMER_ENABLED(o) ((o & AIOptions::TimeManagement) != 0)
 
 //define IF_CONSTEXPR_AVAILABLE if "constexpr if" feature from C++17 is available

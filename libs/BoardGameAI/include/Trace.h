@@ -15,7 +15,7 @@ public:
 	{
 
 	}
-	virtual void startSearch(const std::shared_ptr<BoardGame<GameType>>& /*game*/) {}
+	virtual void startSearch(const std::shared_ptr<GameType>& /*game*/) {}
 	virtual void tracePositionValue(int /*value*/) {  }
 	virtual void startAlphaBetaSearch(unsigned int /*depth*/) {}
 	virtual void alphaBetaWindow(int /*alpha*/, int /*beta*/) {}

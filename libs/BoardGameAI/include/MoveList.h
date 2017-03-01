@@ -5,11 +5,16 @@
 #include <memory>
 #include <algorithm>
 #include "types.h"
+#include "StaticVector.h"
+#include "SmartVector.h"
 
-class MoveList
+
+template<int maxMoves>
+class MoveList 
 {
 private:
-	std::vector<ExtMove> moves;
+	typedef SmartVector<ExtMove, maxMoves> MovesType;
+	MovesType moves;
 public:
 	MoveList()
 	{
@@ -58,5 +63,7 @@ public:
 	{
 		moves.pop_back();
 	}
-
+	
+	typedef typename MovesType::iterator iterator;
+	typedef typename MovesType::const_iterator const_iterator;
 };

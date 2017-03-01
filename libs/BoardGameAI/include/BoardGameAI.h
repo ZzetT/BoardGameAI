@@ -45,14 +45,18 @@ template<class GameType, int options, int tTableSizeMB>
 class BoardGameAI 
 {
 private:
-	std::shared_ptr<BoardGame<GameType>> game;
-	std::vector<std::unique_ptr<MoveList>> movesCache; // to avoid recurring allocation of move arrays with each depth, they are cached here and reused
+	typedef typename GameType::MoveHistoryType MoveHistoryType;
+	typedef typename GameType::MovesPerPositionType MovesPerPositionType;
+
+	std::shared_ptr<GameType> game;
+	SmartVector<MovesPerPositionType, GameType::MAX_HISTORY_MOVES> movesCache; // to avoid recurring allocation of move arrays with each depth, they are cached here and reused
+	//std::vector<MovesPerPositionType> movesCache; // to avoid recurring allocation of move arrays with each depth, they are cached here and reused
 	std::shared_ptr<Trace<GameType>> trace = nullptr;
 	Move bestRootMoveTmp; // best move found in the last iteration
 	uint64_t nodes = 0; // number of nodes searched
 	bool abortSearch; // set to true if time is over to abort the search
 	bool depthReached; // flag shows if the last iteration reached the full depth, if not it's not necessary to search one level deeper
-	static const int MOVE_NONE = BoardGame<GameType>::getNoMoveValue();
+	static const int MOVE_NONE = GameType::getNoMoveValue();
 
 	//time management data
 	std::chrono::time_point<std::chrono::system_clock> startTime;
@@ -64,7 +68,7 @@ private:
 	std::unique_ptr<TTableReplaceByDepth<tTableSizeMB>> tTable = std::make_unique<TTableReplaceByDepth<tTableSizeMB>>(); // transposition table
 
 	//history table
-	int historyTable[2][BoardGame<GameType>::getHistoryStates()];
+	int historyTable[2][GameType::getHistoryStates()];
 
 	void initializeSearch()
 	{
@@ -98,7 +102,7 @@ private:
 
 		TRACE_ALPHA_BETA_WINDOW(alpha, beta);
 		int16_t alphaOrig = alpha;
-
+		bool searchPv = true;
 		uint64_t hash;
 		Move bestMove = MOVE_NONE;
 
@@ -147,7 +151,7 @@ private:
 			return evaluatePosition();
 		}
 
-		MoveList *moves = movesCache.at(depthLeft).get();
+		MovesPerPositionType* moves = &movesCache[depthLeft];
 		MovePicker<BoardGameAI<GameType, options, tTableSizeMB>, GameType, options> movePicker(*this, game, bestMove, moves);
 
 		int16_t bestValue = -INFINITE;
@@ -157,7 +161,26 @@ private:
 			game->makeMove(move);
 			nodes++;
 			TRACE_MAKE_MOVE(move);
-			int16_t value = -alphaBeta<false>(depthLeft - 1, -beta, -alpha);
+			int16_t value;
+			STATIC_IF(PVS_ENABLED(options))
+			{
+				if (searchPv)
+				{
+					value = -alphaBeta<false>(depthLeft - 1, -beta, -alpha);
+				}
+				else
+				{
+					value = -alphaBeta<false>(depthLeft - 1, -alpha - 1, -alpha);
+					if (value > alpha && value < beta) //fail-soft condition
+					{
+						value = -alphaBeta<false>(depthLeft - 1, -beta, -alpha); // re-search
+					}
+				}
+			}
+			else
+			{
+				value = -alphaBeta<false>(depthLeft - 1, -beta, -alpha);
+			}
 			game->undoMove();
 			TRACE_UNDO_MOVE();
 
@@ -182,6 +205,10 @@ private:
 				if (value > alpha)
 				{
 					alpha = value;
+					STATIC_IF(PVS_ENABLED(options))
+					{
+						searchPv = false;
+					}
 				}
 				STATIC_IF(HISTORY_ENABLED(options))
 				{
@@ -218,7 +245,7 @@ private:
 	SearchResult searchIterative(unsigned int maxDepth)
 	{
 		unsigned int currentMaxDepth = 0;
-		int16_t score;
+		int16_t score = 0;
 		int bestMove = MOVE_NONE;
 		depthReached = true;
 		initializeSearch();
@@ -234,14 +261,14 @@ private:
 			!abortSearch)
 		{
 			currentMaxDepth++;
-			while (movesCache.size() <= currentMaxDepth) movesCache.push_back(std::make_unique<MoveList>());
+			while (movesCache.size() <= currentMaxDepth) movesCache.push_back(MovesPerPositionType());
 
 
 			//std::cout << "depth " << currentMaxDepth;
 			TRACE_START_ALPHA_BETA_SEARCH(currentMaxDepth);
 			depthReached = false;
 			int scoreTmp = alphaBeta<true>(currentMaxDepth, -INFINITE, INFINITE);
-			if (!abortSearch || currentMaxDepth == 0)
+			if (!abortSearch)
 			{
 				// only use best move/score from previous search if search was completed
 				// otherwise best move/score is only calculated from the moves that were analyzed before abort
@@ -255,7 +282,7 @@ private:
 
 		}
 		TRACE_FINISH_SEARCH();
-		return SearchResult(score, bestMove, currentMaxDepth, game->moveCounter);
+		return SearchResult(score, bestMove, currentMaxDepth, game->getMoveCounter());
 	}
 
 	template<int o = options, std::enable_if_t<!ITERATE_ENABLED(o)>* = nullptr>
@@ -280,7 +307,7 @@ public:
 	BoardGameAI(const BoardGameAI<GameType, options, tTableSizeMB>& other) { (void)other; }
 	~BoardGameAI() {}
 
-	SearchResult search(const std::shared_ptr<BoardGame<GameType>>& gameArgument, unsigned int maxDepth = MAX_PLY, unsigned int maxTime = 0)
+	SearchResult search(const std::shared_ptr<GameType>& gameArgument, unsigned int maxDepth = MAX_PLY, unsigned int maxTime = 0)
 	{
 		this->game = gameArgument;
 		abortSearch = false;
@@ -318,6 +345,8 @@ struct AIBuilder_t
 
 	// depth-first search is run repeatedly with increasing depth limits
 	constexpr auto iterativeDeepening() const -> AIBuilder_t<GameType, options | AIOptions::Iterate, tTableSizeMB> { return{}; }
+	// use prinicipal variation search
+	constexpr auto usePVS() const -> AIBuilder_t<GameType, options | AIOptions::PVS, tTableSizeMB> { return{}; }
 	// will save the game tree (only required for debugging)
 	constexpr auto doTracing() const -> AIBuilder_t<GameType, options | AIOptions::DoTrace, tTableSizeMB> { return{}; }
 	// uses history heuristics

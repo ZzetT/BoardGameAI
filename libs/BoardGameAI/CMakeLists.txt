@@ -15,6 +15,8 @@ set(LIBRARY_HEADERS
     ${LIBRARY_HEADERS_DIR}/BoardGameAI.h
     ${LIBRARY_HEADERS_DIR}/MoveList.h
     ${LIBRARY_HEADERS_DIR}/MovePicker.h
+	${LIBRARY_HEADERS_DIR}/SmartVector.h
+	${LIBRARY_HEADERS_DIR}/StaticVector.h
     ${LIBRARY_HEADERS_DIR}/Trace.h
     ${LIBRARY_HEADERS_DIR}/TraceOutput.h
     ${LIBRARY_HEADERS_DIR}/TraceOutputNode.h

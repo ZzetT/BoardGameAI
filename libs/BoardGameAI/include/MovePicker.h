@@ -5,6 +5,7 @@
 #include <cassert>
 #include "BoardGame.h"
 #include "BoardGameAI.h"
+#include "SmartVector.h"
 
 enum State
 {
@@ -14,19 +15,21 @@ enum State
 template<class AIType, class GameType, int options>
 class MovePicker
 {
+	typedef typename GameType::MovesPerPositionType MovesPerPositionType;
+
 public:
-	MovePicker(const AIType& ai, const std::shared_ptr<BoardGame<GameType>>& game, Move ttMove, MoveList *moves)
+	MovePicker(const AIType& ai, const std::shared_ptr<GameType>& game, Move ttMove, MovesPerPositionType *moves)
 		: game(game), ai(ai), ttMove(ttMove), moves(moves)
 	{
 		state = (ttMove == MOVE_NONE ? GENERATE_MOVES : TTMOVE);
 	}
 
 	~MovePicker() {};
-	std::vector<ExtMove>::const_iterator sortedBegin()
+	typename MovesPerPositionType::const_iterator sortedBegin()
 	{
 		return moves->data()->begin();
 	}
-	std::vector<ExtMove>::const_iterator sortedEnd()
+	typename MovesPerPositionType::const_iterator sortedEnd()
 	{
 		if (state == TTMOVE || state == GENERATE_MOVES)
 		{
@@ -72,17 +75,17 @@ public:
 	}
 
 private:
-	const std::shared_ptr<BoardGame<GameType>> game;
+	const std::shared_ptr<GameType> game;
 	const AIType& ai;
 	Move ttMove;
 	State state;
-	MoveList *moves;
-	static const int MOVE_NONE = BoardGame<GameType>::getNoMoveValue();
+	MovesPerPositionType* moves;
+	static const int MOVE_NONE = GameType::getNoMoveValue();
 
-	std::vector<ExtMove>::iterator moveIter;
-	std::vector<ExtMove>::iterator moveEndIter;
+	typename MovesPerPositionType::iterator moveIter;
+	typename MovesPerPositionType::iterator moveEndIter;
 
-	Move pick_best(std::vector<ExtMove>::iterator begin, std::vector<ExtMove>::iterator end)
+	Move pick_best(typename MovesPerPositionType::iterator begin, typename MovesPerPositionType::iterator end)
 	{
 		std::swap(*begin, *std::max_element(begin, end, [](ExtMove a, ExtMove b) { return a.value < b.value; }));
 		return begin->move;
