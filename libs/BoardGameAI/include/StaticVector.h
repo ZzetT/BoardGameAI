@@ -44,7 +44,10 @@ public:
 	using reverse_iterator = std::reverse_iterator<iterator>;
 	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-	constexpr static_vector() = default;
+	static_vector() 
+	{
+
+	}
 	static_vector(std::initializer_list<T> l) {
 		if (l.size() > N) {
 			throw std::out_of_range("static_vector::static_vector");
