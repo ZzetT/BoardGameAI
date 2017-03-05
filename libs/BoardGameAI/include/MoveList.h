@@ -9,7 +9,7 @@
 #include "SmartVector.h"
 
 
-template<int maxMoves>
+template<int maxMoves = 0>
 class MoveList 
 {
 private:
@@ -41,7 +41,7 @@ public:
 	}
 	auto data() const
 	{
-		return (const std::vector<ExtMove>*)&moves;
+		return (const MovesType*)&moves;
 	}
 	auto lastMove() const
 	{

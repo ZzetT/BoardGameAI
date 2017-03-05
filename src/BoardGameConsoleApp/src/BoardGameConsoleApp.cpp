@@ -17,7 +17,7 @@ bool is_number(const std::string& s)
 int main()
 {
 	std::shared_ptr<Connect4Game> game = std::make_shared<Connect4Game>();
-	std::unique_ptr<MoveList> moves = std::make_unique<MoveList>();
+	std::unique_ptr<Connect4Game::MovesPerPositionType> moves = std::make_unique<Connect4Game::MovesPerPositionType>();
 	auto ai = AIBuilder<Connect4Game>{}.iterativeDeepening().useTTable().enableTimeManagement().create();
 	string input;
 
