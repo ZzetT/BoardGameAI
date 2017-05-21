@@ -8,12 +8,7 @@ enum Bound : uint8_t {
 	BOUND_LOWER,
 	BOUND_EXACT = BOUND_UPPER | BOUND_LOWER
 };
-
-const int MAX_PLY = 128;
-
 static const int WINNING_VALUE = 32000;
-
-static const int WINNING_IN_MAX_PLY = WINNING_VALUE - MAX_PLY;
 
 static const int INFINITE = 32700;
 
@@ -31,6 +26,7 @@ public:
 	ExtMove() {}
 	operator Move() const { return move; }
 	void operator=(Move m) { move = m; }
+	void operator+=(int v) { value += v; }
 };
 
 inline bool operator<(const ExtMove& f, const ExtMove& s) {
@@ -40,19 +36,22 @@ inline bool operator<(const ExtMove& f, const ExtMove& s) {
 namespace AIOptions
 {
 	enum {
-		None =				1 << 0,
-		DoTrace =			1 << 1, // trace steps during search
-		Iterate =			1 << 2, // iterative deepening
-		HistoryHeuristic =  1 << 3, // use history heuristics
-		TimeManagement =	1 << 4, // cancel search after time is over
-		PVS =				1 << 5 // principial variation search
+		None =					1 << 0,
+		Iterate =				1 << 2, // iterative deepening
+		CounterMove =			1 << 3, // use counter moves heuristic
+		TimeManagement =		1 << 4, // cancel search after time is over
+		PVS =					1 << 5, // principial variation search
+		MateDistancePruning =	1 << 6, // mate distance pruning
+		UpdateStatus =			1 << 7 // update status
 	};
 }
 
 #define ITERATE_ENABLED(o) ((o & AIOptions::Iterate) != 0)
-#define HISTORY_ENABLED(o) ((o & AIOptions::HistoryHeuristic) != 0)
+#define COUNTERMOVE_ENABLED(o) ((o & AIOptions::CounterMove) != 0)
 #define PVS_ENABLED(o) ((o & AIOptions::PVS) != 0)
 #define TIMER_ENABLED(o) ((o & AIOptions::TimeManagement) != 0)
+#define MATE_DISTANCE_PRUNING_ENABLED(o) ((o & AIOptions::MateDistancePruning) != 0)
+#define UPDATE_STATUS_ENABLED(o) ((o & AIOptions::UpdateStatus) != 0)
 
 //define IF_CONSTEXPR_AVAILABLE if "constexpr if" feature from C++17 is available
 #ifdef IF_CONSTEXPR_AVAILABLE

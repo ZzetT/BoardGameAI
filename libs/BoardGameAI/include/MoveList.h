@@ -9,11 +9,11 @@
 #include "SmartVector.h"
 
 
-template<int maxMoves = 0>
-class MoveList 
+template<typename MoveType = Move, int maxMoves = 0>
+class MoveList
 {
 private:
-	typedef SmartVector<ExtMove, maxMoves> MovesType;
+	typedef SmartVector<MoveType, maxMoves> MovesType;
 	MovesType moves;
 public:
 	MoveList()
@@ -51,13 +51,9 @@ public:
 	{
 		return moves.size();
 	}
-	void addMove(Move move, Value value)
+	void addMove(MoveType move)
 	{
-		moves.push_back(ExtMove(move, value));
-	}
-	void addMove(Move move)
-	{
-		moves.push_back(ExtMove(move));
+		moves.push_back(move);
 	}
 	void undoMove()
 	{

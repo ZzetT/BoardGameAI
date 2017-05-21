@@ -19,22 +19,22 @@ TEST_CASE("Connect4: Current player", "[Connect4][Logic]")
 TEST_CASE("Connect4: Get Moves", "[Connect4][Logic]")
 {
 	Connect4Game game;
-	MoveList moves;
+	std::vector<Move> moves;
 	moves.clear();
-	game.getMoves(&moves);
+	game.moves(moves);
 	REQUIRE((size_t)7 == moves.size());
 	for (int i = 0; i < 6; i++) {
 		game.makeMove(1);
 	}
 	moves.clear();
-	game.getMoves(&moves);
+	game.moves(moves);
 	REQUIRE((size_t)6 == moves.size());
 
 	for (int i = 0; i < 6; i++) {
 		game.makeMove(2);
 	}
 	moves.clear();
-	game.getMoves(&moves);
+	game.moves(moves);
 	REQUIRE((size_t)5 == moves.size());
 
 	for (int i = 0; i < 6; i++) {
@@ -42,7 +42,7 @@ TEST_CASE("Connect4: Get Moves", "[Connect4][Logic]")
 	}
 
 	moves.clear();
-	game.getMoves(&moves);
+	game.moves(moves);
 	REQUIRE((size_t)4 == moves.size());
 
 	game.makeMove(7);
@@ -51,7 +51,7 @@ TEST_CASE("Connect4: Get Moves", "[Connect4][Logic]")
 	}
 
 	moves.clear();
-	game.getMoves(&moves);
+	game.moves(moves);
 	REQUIRE((size_t)3 == moves.size());
 
 	for (int i = 0; i < 6; i++) {
@@ -59,7 +59,7 @@ TEST_CASE("Connect4: Get Moves", "[Connect4][Logic]")
 	}
 
 	moves.clear();
-	game.getMoves(&moves);
+	game.moves(moves);
 	REQUIRE((size_t)2 == moves.size());
 
 	game.makeMove(7);
@@ -68,7 +68,7 @@ TEST_CASE("Connect4: Get Moves", "[Connect4][Logic]")
 	}
 
 	moves.clear();
-	game.getMoves(&moves);
+	game.moves(moves);
 	REQUIRE((size_t)1 == moves.size());
 
 	for (int i = 0; i < 4; i++) {
@@ -76,7 +76,7 @@ TEST_CASE("Connect4: Get Moves", "[Connect4][Logic]")
 	}
 
 	moves.clear();
-	game.getMoves(&moves);
+	game.moves(moves);
 	REQUIRE((size_t)0 == moves.size());
 }
 TEST_CASE("Connect4: Has Won Vertical", "[Connect4][Logic]")
@@ -156,11 +156,11 @@ TEST_CASE("Connect4: Has Won Diagonal", "[Connect4][Logic]")
 TEST_CASE("Connect4: Hash", "[Connect4][Logic]")
 {
 	Connect4Game game;
-	REQUIRE(0ULL == game.getHash());
+	REQUIRE(0ULL == game.hash());
 	game.makeMove(3);
-	REQUIRE(2599907046820534596ULL == game.getHash());
+	REQUIRE(2599907046820534596ULL == game.hash());
 	game.makeMove(7);
-	REQUIRE(7916255078273704207ULL == game.getHash());
+	REQUIRE(7916255078273704207ULL == game.hash());
 	game.makeMove(3);
-	REQUIRE(5376913096070052708ULL == game.getHash());
+	REQUIRE(5376913096070052708ULL == game.hash());
 }

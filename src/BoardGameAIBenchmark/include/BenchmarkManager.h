@@ -16,7 +16,7 @@ public:
 	BenchmarkManager(const std::vector<AbstractBenchmark*>& benchmarks) : benchmarks(benchmarks) {
 		for (auto benchmark : benchmarks)
 		{
-			maximumNameLength = std::max(maximumNameLength, benchmark->getName().length());
+			maximumNameLength = std::max(maximumNameLength, benchmark->name.length());
 		}
 	}
 	//split function taken from http://stackoverflow.com/a/236803/5107610
@@ -82,14 +82,14 @@ public:
 				if (refresh)
 				{
 					std::ostringstream nodesText;
-					nodesText << std::setprecision(2) << std::showpoint << std::fixed << benchmark->getAverageNodes() << " nodes ";
+					nodesText << std::setprecision(2) << std::showpoint << std::fixed << benchmark->averageNodes() << " nodes ";
 					std::ostringstream durationText;
-					durationText << std::setprecision(2) << std::showpoint << std::fixed << benchmark->getAverageTime() << " ms ";
-					std::cout << std::left << std::setw(maximumNameLength + 1) << std::setfill(emptySpace) << benchmark->getName()
+					durationText << std::setprecision(2) << std::showpoint << std::fixed << benchmark->averageTime() << " ms ";
+					std::cout << std::left << std::setw(maximumNameLength + 1) << std::setfill(emptySpace) << benchmark->name
 						<< std::setw(20) << nodesText.str()
 						<< std::setw(20) << durationText.str()
-						<< "errors " << benchmark->getErrors()
-						<< "cached " << benchmark->getCached()
+						<< "errors " << benchmark->errors
+						<< " cached " << benchmark->cached
 						<< std::endl;
 				}
 			}

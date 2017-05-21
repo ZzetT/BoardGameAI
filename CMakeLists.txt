@@ -32,8 +32,6 @@ endif()
 # Test #
 #########
 enable_testing()
-add_subdirectory(test)
-
 
 ###########
 # Project #

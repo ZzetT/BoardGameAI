@@ -2,10 +2,11 @@
 #include "RecordedBenchmark.h"
 #include "CSVIterator.h"
 
-template<class GameType, class AIType>
+template<class AIType>
 class LiveBenchmark : public RecordedBenchmark
 {
 private:
+	typedef typename AIType::AIGameType GameType;
 	bool switchedToWriteMode = false;
 
 	std::shared_ptr<GameType> game = std::make_shared<GameType>();
@@ -51,9 +52,9 @@ public:
 			auto startTime = chrono::system_clock::now();
 			SearchResult result = ai->search(game);
 			long long time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - startTime).count();
-			auto nodes = ai->getAnalyzedPositions();
+			auto nodes = ai->analyzedPositions();
 			addGameResult(time, nodes, expectedValue != result.value, false);
-			cacheFile << moves << "," << expectedValue << "," << result.value << "," << getLastNodes() << "," << getLastTime() << std::endl;
+			cacheFile << moves << "," << expectedValue << "," << result.value << "," << lastNodes << "," << lastTime << std::endl;
 		}
 	}
 };

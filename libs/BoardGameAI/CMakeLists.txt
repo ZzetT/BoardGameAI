@@ -17,9 +17,7 @@ set(LIBRARY_HEADERS
     ${LIBRARY_HEADERS_DIR}/MovePicker.h
 	${LIBRARY_HEADERS_DIR}/SmartVector.h
 	${LIBRARY_HEADERS_DIR}/StaticVector.h
-    ${LIBRARY_HEADERS_DIR}/Trace.h
-    ${LIBRARY_HEADERS_DIR}/TraceOutput.h
-    ${LIBRARY_HEADERS_DIR}/TraceOutputNode.h
+	${LIBRARY_HEADERS_DIR}/StatusUpdate.h
     ${LIBRARY_HEADERS_DIR}/TTableReplaceByDepth.h
     ${LIBRARY_HEADERS_DIR}/TTEntry.h
     ${LIBRARY_HEADERS_DIR}/types.h
@@ -28,7 +26,7 @@ set(LIBRARY_SOURCE_DIR
     src
 )
 set(LIBRARY_SOURCE
-    ${LIBRARY_SOURCE_DIR}/TraceOutputNode.cpp
+    ${LIBRARY_SOURCE_DIR}/dummy.cpp
 )
 
 project(${PROJECT_NAME})
